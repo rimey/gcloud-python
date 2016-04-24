@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Resource Descriptors for the `Google Monitoring API (V3)`_.
+"""Monitored Resource Descriptors for the `Google Monitoring API (V3)`_.
 
 .. _Google Monitoring API (V3):
     https://cloud.google.com/monitoring/api/ref_v3/rest/v3/\
@@ -59,7 +59,7 @@ class ResourceDescriptor(object):
 
     @classmethod
     def _fetch(cls, client, resource_type):
-        """Look up a resource descriptor by type.
+        """Look up a monitored resource descriptor by type.
 
         :type client: :class:`gcloud.monitoring.client.Client`
         :param client: The client to use.
@@ -81,7 +81,7 @@ class ResourceDescriptor(object):
 
     @classmethod
     def _list(cls, client, filter_string=None):
-        """List all resource descriptors for the project.
+        """List all monitored resource descriptors for the project.
 
         :type client: :class:`gcloud.monitoring.client.Client`
         :param client: The client to use.
