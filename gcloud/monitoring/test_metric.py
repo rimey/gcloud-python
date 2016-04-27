@@ -505,7 +505,17 @@ class TestMetric(unittest2.TestCase):
             'response_code': 200,
             'loading': False,
         }
-        metric = self._makeOne(type=TYPE, labels=LABELS)
+        metric = self._makeOne(TYPE, LABELS)
+        self.assertEqual(metric.type, TYPE)
+        self.assertEqual(metric.labels, LABELS)
+
+    def test_keyword_arguments(self):
+        TYPE = 'appengine.googleapis.com/http/server/response_count'
+        LABELS = {
+            'response_code': 200,
+            'loading': False,
+        }
+        metric = self._makeOne(TYPE, **LABELS)
         self.assertEqual(metric.type, TYPE)
         self.assertEqual(metric.labels, LABELS)
 
@@ -529,6 +539,17 @@ class TestMetric(unittest2.TestCase):
         metric = self._getTargetClass()._from_dict(info)
         self.assertEqual(metric.type, TYPE)
         self.assertEqual(metric.labels, {})
+
+    def test_equality(self):
+        TYPE = 'appengine.googleapis.com/http/server/response_count'
+        LABELS = {
+            'response_code': 200,
+            'loading': False,
+        }
+        metric1 = self._makeOne(TYPE, LABELS)
+        metric2 = self._makeOne(TYPE, LABELS)
+        self.assertTrue(metric1 == metric2)
+        self.assertFalse(metric1 != metric2)
 
 
 class _Connection(object):

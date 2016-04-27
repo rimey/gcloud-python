@@ -290,7 +290,18 @@ class TestResource(unittest2.TestCase):
             'instance_id': '1234567890123456789',
             'zone': 'us-central1-a',
         }
-        resource = self._makeOne(type=TYPE, labels=LABELS)
+        resource = self._makeOne(TYPE, LABELS)
+        self.assertEqual(resource.type, TYPE)
+        self.assertEqual(resource.labels, LABELS)
+
+    def test_keyword_arguments(self):
+        TYPE = 'gce_instance'
+        LABELS = {
+            'project_id': 'my-project',
+            'instance_id': '1234567890123456789',
+            'zone': 'us-central1-a',
+        }
+        resource = self._makeOne(TYPE, **LABELS)
         self.assertEqual(resource.type, TYPE)
         self.assertEqual(resource.labels, LABELS)
 
@@ -315,6 +326,18 @@ class TestResource(unittest2.TestCase):
         resource = self._getTargetClass()._from_dict(info)
         self.assertEqual(resource.type, TYPE)
         self.assertEqual(resource.labels, {})
+
+    def test_equality(self):
+        TYPE = 'gce_instance'
+        LABELS = {
+            'project_id': 'my-project',
+            'instance_id': '1234567890123456789',
+            'zone': 'us-central1-a',
+        }
+        resource1 = self._makeOne(TYPE, LABELS)
+        resource2 = self._makeOne(TYPE, LABELS)
+        self.assertTrue(resource1 == resource2)
+        self.assertFalse(resource1 != resource2)
 
 
 class _Connection(object):

@@ -48,8 +48,8 @@ class TestTimeSeries(unittest2.TestCase):
 
         VALUE = 60  # seconds
 
-        METRIC = Metric(type=METRIC_TYPE, labels=METRIC_LABELS)
-        RESOURCE = Resource(type=RESOURCE_TYPE, labels=RESOURCE_LABELS)
+        METRIC = Metric(METRIC_TYPE, METRIC_LABELS)
+        RESOURCE = Resource(RESOURCE_TYPE, RESOURCE_LABELS)
         POINTS = [
             Point(start_time=TS0, end_time=TS1, value=VALUE),
             Point(start_time=TS1, end_time=TS2, value=VALUE),

@@ -19,8 +19,6 @@
     projects.monitoredResourceDescriptors
 """
 
-import collections
-
 from gcloud.monitoring.label import LabelDescriptor
 
 
@@ -154,17 +152,24 @@ class ResourceDescriptor(object):
         ).format(**self.__dict__)
 
 
-class Resource(collections.namedtuple('Resource', 'type labels')):
+class Resource(object):
     """A monitored resource identified by specifying values for all labels.
 
-    :type type: string
-    :param type: The resource type name.
+    :type type_: string
+    :param type_: The resource type name.
 
-    :type labels: dict
-    :param labels: A mapping from label names to values for all labels
-                   enumerated in the associated :class:`ResourceDescriptor`.
+    :type labels: dict or None
+    :param labels:
+        A mapping from label names to values for all labels enumerated in
+        the associated :class:`ResourceDescriptor`. Empty if omitted.
+
+    :type kwargs: dict
+    :param kwargs: Keyword arguments to include in ``labels``.
     """
-    __slots__ = ()
+
+    def __init__(self, type_, labels=None, **kwargs):
+        self.type = type_
+        self.labels = dict(labels or {}, **kwargs)
 
     @classmethod
     def _from_dict(cls, info):
@@ -177,7 +182,14 @@ class Resource(collections.namedtuple('Resource', 'type labels')):
         :rtype: :class:`Resource`
         :returns: A resource object.
         """
-        return cls(
-            type=info['type'],
-            labels=info.get('labels', {}),
-        )
+        return cls(info['type'], info.get('labels', {}))
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return self.__dict__ != other.__dict__
+
+    def __repr__(self):
+        return 'Resource(type_={type!r}, labels={labels!r})'.format(
+            **self.__dict__)

@@ -19,8 +19,6 @@
     projects.metricDescriptors
 """
 
-import collections
-
 from gcloud.monitoring.label import LabelDescriptor
 
 
@@ -316,17 +314,24 @@ class MetricDescriptor(object):
         ).format(**self.__dict__)
 
 
-class Metric(collections.namedtuple('Metric', 'type labels')):
+class Metric(object):
     """A specific metric identified by specifying values for all labels.
 
-    :type type: string
-    :param type: The metric type name.
+    :type type_: string
+    :param type_: The metric type name.
 
-    :type labels: dict
-    :param labels: A mapping from label names to values for all labels
-                   enumerated in the associated :class:`MetricDescriptor`.
+    :type labels: dict or None
+    :param labels:
+        A mapping from label names to values for all labels enumerated in
+        the associated :class:`MetricDescriptor`. Empty if omitted.
+
+    :type kwargs: dict
+    :param kwargs: Keyword arguments to include in ``labels``.
     """
-    __slots__ = ()
+
+    def __init__(self, type_, labels=None, **kwargs):
+        self.type = type_
+        self.labels = dict(labels or {}, **kwargs)
 
     @classmethod
     def _from_dict(cls, info):
@@ -339,7 +344,14 @@ class Metric(collections.namedtuple('Metric', 'type labels')):
         :rtype: :class:`Metric`
         :returns: A metric object.
         """
-        return cls(
-            type=info['type'],
-            labels=info.get('labels', {}),
-        )
+        return cls(info['type'], info.get('labels', {}))
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return self.__dict__ != other.__dict__
+
+    def __repr__(self):
+        return 'Metric(type_={type!r}, labels={labels!r})'.format(
+            **self.__dict__)

@@ -75,8 +75,8 @@ def generate_query_results():  # pragma: NO COVER
     for metric_labels, resource_labels, value in zip(
             METRIC_LABELS, RESOURCE_LABELS, VALUES):
         yield TimeSeries(
-            metric=Metric(type=METRIC_TYPE, labels=metric_labels),
-            resource=Resource(type=RESOURCE_TYPE, labels=resource_labels),
+            metric=Metric(METRIC_TYPE, metric_labels),
+            resource=Resource(RESOURCE_TYPE, resource_labels),
             metric_kind=METRIC_KIND,
             value_type=VALUE_TYPE,
             points=[P(t, value) for t in TIMESTAMPS],
