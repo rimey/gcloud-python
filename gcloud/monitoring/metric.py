@@ -306,13 +306,13 @@ class MetricDescriptor(object):
 
     def __repr__(self):
         return (
-            'MetricDescriptor(\n'
+            '<MetricDescriptor:\n'
             ' name={name!r},\n'
             ' type={type!r},\n'
             ' metric_kind={metric_kind!r}, value_type={value_type!r},\n'
             ' labels={labels!r},\n'
             ' display_name={display_name!r}, unit={unit!r},\n'
-            ' description={description!r})'
+            ' description={description!r}>'
         ).format(**self.__dict__)
 
 

@@ -145,12 +145,12 @@ class ResourceDescriptor(object):
 
     def __repr__(self):
         return (
-            'ResourceDescriptor(\n'
+            '<ResourceDescriptor:\n'
             ' name={name!r},\n'
             ' type={type!r},\n'
             ' labels={labels!r},\n'
             ' display_name={display_name!r},\n'
-            ' description={description!r})'
+            ' description={description!r}>'
         ).format(**self.__dict__)
 
 
