@@ -23,13 +23,15 @@ Features intentionally omitted from this first version of the client library:
 """
 
 import collections
+import copy
 
 from gcloud.monitoring.metric import Metric
+from gcloud.monitoring.metric import MetricKind
+from gcloud.monitoring.metric import ValueType
 from gcloud.monitoring.resource import Resource
 
 
-class TimeSeries(collections.namedtuple(
-        'TimeSeries', 'metric resource metric_kind value_type points')):
+class TimeSeries(object):
     """A single time series of metric values.
 
     :type metric: :class:`~gcloud.monitoring.metric.Metric`
@@ -52,10 +54,21 @@ class TimeSeries(collections.namedtuple(
         See :class:`~gcloud.monitoring.metric.ValueType`.
 
     :type points: list of :class:`Point`
-    :param points: A list of point objects.
+    :param points:
+        An optional list of point objects, defaulting to the empty list.
     """
 
     _labels = None
+
+    def __init__(self, metric, resource,
+                 metric_kind=MetricKind.METRIC_KIND_UNSPECIFIED,
+                 value_type=ValueType.VALUE_TYPE_UNSPECIFIED,
+                 points=None):
+        self.metric = metric
+        self.resource = resource
+        self.metric_kind = metric_kind
+        self.value_type = value_type
+        self.points = points or []
 
     @property
     def labels(self):
@@ -81,8 +94,9 @@ class TimeSeries(collections.namedtuple(
         :rtype: :class:`TimeSeries`
         :returns: The new time series object.
         """
-        points = list(points) if points else []
-        return self._replace(points=points)
+        result = copy.copy(self)
+        result.points = list(points) if points else []
+        return result
 
     @classmethod
     def _from_dict(cls, info):
@@ -101,6 +115,12 @@ class TimeSeries(collections.namedtuple(
         value_type = info['valueType']
         points = [Point._from_dict(p) for p in info.get('points', ())]
         return cls(metric, resource, metric_kind, value_type, points)
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return self.__dict__ != other.__dict__
 
     def __repr__(self):
         """Return a representation string with the points elided."""

@@ -429,8 +429,8 @@ class Query(object):
         :raises: :exc:`ValueError` if the query time interval has not been
             specified.
         """
-        # The following use of groupby() relies on equality comparison
-        # of time series as (named) tuples.
+        # The following use of groupby() requires that time series can be
+        # compared for equality.
         for timeseries, fragments in itertools.groupby(
                 self._iter_fragments(headers_only, page_size),
                 lambda fragment: fragment.header()):

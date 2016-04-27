@@ -67,6 +67,21 @@ class TestTimeSeries(unittest2.TestCase):
         self.assertEqual(series.value_type, VALUE_TYPE)
         self.assertEqual(series.points, POINTS)
 
+    def test_constructor_defaults(self):
+        from gcloud.monitoring.metric import Metric
+        from gcloud.monitoring.resource import Resource
+
+        METRIC = Metric(METRIC_TYPE, METRIC_LABELS)
+        RESOURCE = Resource(RESOURCE_TYPE, RESOURCE_LABELS)
+
+        series = self._makeOne(metric=METRIC, resource=RESOURCE)
+
+        self.assertEqual(series.metric, METRIC)
+        self.assertEqual(series.resource, RESOURCE)
+        self.assertEqual(series.metric_kind, 'METRIC_KIND_UNSPECIFIED')
+        self.assertEqual(series.value_type, 'VALUE_TYPE_UNSPECIFIED')
+        self.assertEqual(series.points, [])
+
     def test_from_dict(self):
         VALUE = 60  # seconds
 
@@ -146,6 +161,19 @@ class TestTimeSeries(unittest2.TestCase):
         self.assertEqual(series.labels, labels)
         self.assertIsNotNone(series._labels)
         self.assertEqual(series.labels, labels)
+
+    def test_equality(self):
+        from gcloud.monitoring.metric import Metric
+        from gcloud.monitoring.resource import Resource
+
+        METRIC = Metric(METRIC_TYPE, METRIC_LABELS)
+        RESOURCE = Resource(RESOURCE_TYPE, RESOURCE_LABELS)
+
+        series1 = self._makeOne(metric=METRIC, resource=RESOURCE)
+        series2 = self._makeOne(metric=METRIC, resource=RESOURCE)
+
+        self.assertTrue(series1 == series2)
+        self.assertFalse(series1 != series2)
 
 
 class TestPoint(unittest2.TestCase):
